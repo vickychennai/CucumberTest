@@ -68,41 +68,15 @@ public class LoginPage {
 		// driver.quit();
 	}
 
-	/*
-	 * @When("The user fills all the basic details requested on the page") public
-	 * void the_user_fills_all_the_basic_details_requested_on_the_page() {
-	 * 
-	 * driver.findElement(By.xpath(
-	 * "/html/body/table/tbody/tr/td/table/tbody/tr[4]/td[2]/input")).sendKeys(
-	 * "VigneshS"); driver.findElement(By.xpath(
-	 * "/html/body/table/tbody/tr/td/table/tbody/tr[5]/td[2]/input[1]")).click();
-	 * driver.findElement(By.xpath(
-	 * "/html/body/table/tbody/tr/td/table/tbody/tr[7]/td[2]/textarea"))
-	 * .sendKeys("72 2nd cross Nanganallur");
-	 * driver.findElement(By.name("dob")).sendKeys("10091987");
-	 * driver.findElement(By.xpath(
-	 * "/html/body/table/tbody/tr/td/table/tbody/tr[8]/td[2]/input")).sendKeys(
-	 * "Chennai"); driver.findElement(By.xpath(
-	 * "/html/body/table/tbody/tr/td/table/tbody/tr[9]/td[2]/input"))
-	 * .sendKeys("TamilNadu"); driver.findElement(By.xpath(
-	 * "/html/body/table/tbody/tr/td/table/tbody/tr[10]/td[2]/input")).sendKeys(
-	 * "600061"); driver.findElement(By.xpath(
-	 * "/html/body/table/tbody/tr/td/table/tbody/tr[11]/td[2]/input"))
-	 * .sendKeys("9856321457"); driver.findElement(By.xpath(
-	 * "/html/body/table/tbody/tr/td/table/tbody/tr[12]/td[2]/input"))
-	 * .sendKeys("vigne@gmail.com"); driver.findElement(By.xpath(
-	 * "/html/body/table/tbody/tr/td/table/tbody/tr[13]/td[2]/input"))
-	 * .sendKeys("password"); }
-	 */
-
 	@When("The user fills all the basic details requested on the page")
 	public void the_user_fills_all_the_basic_details_requested_on_the_page(io.cucumber.datatable.DataTable input) {
 		Map<String, String> inputMap = input.asMap(String.class, String.class);
 		driver.findElement(By.xpath("//input[@name='name']")).sendKeys(inputMap.get("customername"));
 		driver.findElement(By.xpath("//input[@name='rad1']")).click();
 		driver.findElement(By.xpath("//input[@name='dob']")).sendKeys(inputMap.get("dob"));
-		//driver.findElement(By.xpath("//table[@class='layout']//tbody/tr[7]/td[1]")).click();
-		driver.findElement(By.xpath("//table[@class='layout']//tbody/tr[7]/td[2]/textarea")).sendKeys(inputMap.get("address"));
+		// driver.findElement(By.xpath("//table[@class='layout']//tbody/tr[7]/td[1]")).click();
+		driver.findElement(By.xpath("//table[@class='layout']//tbody/tr[7]/td[2]/textarea"))
+				.sendKeys(inputMap.get("address"));
 		driver.findElement(By.xpath("//input[@name='city']")).sendKeys(inputMap.get("city"));
 		driver.findElement(By.xpath("//input[@name='state']")).sendKeys(inputMap.get("state"));
 		driver.findElement(By.xpath("//input[@name='pinno']")).sendKeys(inputMap.get("pin"));
@@ -117,8 +91,8 @@ public class LoginPage {
 		WebElement customerID = driver.findElement(By.xpath("// table[@id=\"customer\"]/tbody/tr[4]/td[2]"));
 		Assert.assertTrue(customerID.getText().length() > 0);
 		String id = customerID.getText();
-		System.out.println("Your customer ID is: " +id);
-		
+		System.out.println("Your customer ID is: " + id);
+
 	}
 
 	@When("The user clicks on Submit")
@@ -131,5 +105,10 @@ public class LoginPage {
 		driver.quit();
 	}
 	
+	@Then("The user unable to create a new customer entry because the email ID used already")
+	public void the_user_unable_to_create_a_new_customer_entry_because_the_email_ID_used_already() {
+		Alert al = driver.switchTo().alert();
+		al.accept();
+	}
 
 }
