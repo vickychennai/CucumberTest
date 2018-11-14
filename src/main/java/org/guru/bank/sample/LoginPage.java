@@ -1,10 +1,14 @@
 package org.guru.bank.sample;
 
+import static org.testng.Assert.assertTrue;
+
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import cucumber.api.java.en.Given;
@@ -19,8 +23,8 @@ public class LoginPage {
 	@Given("The user is in the Guru login Page")
 	public void the_user_is_in_the_Guru_login_Page() {
 		System.setProperty("webdriver.chrome.driver", "C:\\Users\\Vicky\\Java\\Practical\\driver\\chromedriver.exe");
-		driver= new ChromeDriver();
-		driver.get("http://demo.guru99.com/V1/index.php");
+		driver = new ChromeDriver();
+		driver.get("http://demo.guru99.com/V4/index.php");
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 	}
@@ -40,10 +44,14 @@ public class LoginPage {
 	public void the_user_should_be_in_Managers_home_page() {
 		Assert.assertTrue(driver.getCurrentUrl().contains("Managerhomepage"));
 		System.out.println("valid credentials");
-		driver.quit();
+		// driver.quit();
 	}
-	
-	
+
+	@When("The user clicks the New Customer")
+	public void the_user_clicks_the_New_Customer() {
+		driver.findElement(By.xpath("/html/body/div[3]/div/ul/li[2]/a")).click();
+	}
+
 	@When("The user enters the invalid credentials")
 	public void the_user_enters_the_invalid_credentials() throws InterruptedException {
 		driver.findElement(By.name("uid")).sendKeys("mng162582");
@@ -55,10 +63,73 @@ public class LoginPage {
 	public void the_user_should_unable_to_login() {
 		Alert al = driver.switchTo().alert();
 		al.accept();
-		
+
 		System.out.println("invalid credentials");
-		driver.quit();
+		// driver.quit();
 	}
 
+	/*
+	 * @When("The user fills all the basic details requested on the page") public
+	 * void the_user_fills_all_the_basic_details_requested_on_the_page() {
+	 * 
+	 * driver.findElement(By.xpath(
+	 * "/html/body/table/tbody/tr/td/table/tbody/tr[4]/td[2]/input")).sendKeys(
+	 * "VigneshS"); driver.findElement(By.xpath(
+	 * "/html/body/table/tbody/tr/td/table/tbody/tr[5]/td[2]/input[1]")).click();
+	 * driver.findElement(By.xpath(
+	 * "/html/body/table/tbody/tr/td/table/tbody/tr[7]/td[2]/textarea"))
+	 * .sendKeys("72 2nd cross Nanganallur");
+	 * driver.findElement(By.name("dob")).sendKeys("10091987");
+	 * driver.findElement(By.xpath(
+	 * "/html/body/table/tbody/tr/td/table/tbody/tr[8]/td[2]/input")).sendKeys(
+	 * "Chennai"); driver.findElement(By.xpath(
+	 * "/html/body/table/tbody/tr/td/table/tbody/tr[9]/td[2]/input"))
+	 * .sendKeys("TamilNadu"); driver.findElement(By.xpath(
+	 * "/html/body/table/tbody/tr/td/table/tbody/tr[10]/td[2]/input")).sendKeys(
+	 * "600061"); driver.findElement(By.xpath(
+	 * "/html/body/table/tbody/tr/td/table/tbody/tr[11]/td[2]/input"))
+	 * .sendKeys("9856321457"); driver.findElement(By.xpath(
+	 * "/html/body/table/tbody/tr/td/table/tbody/tr[12]/td[2]/input"))
+	 * .sendKeys("vigne@gmail.com"); driver.findElement(By.xpath(
+	 * "/html/body/table/tbody/tr/td/table/tbody/tr[13]/td[2]/input"))
+	 * .sendKeys("password"); }
+	 */
+
+	@When("The user fills all the basic details requested on the page")
+	public void the_user_fills_all_the_basic_details_requested_on_the_page(io.cucumber.datatable.DataTable input) {
+		Map<String, String> inputMap = input.asMap(String.class, String.class);
+		driver.findElement(By.xpath("//input[@name='name']")).sendKeys(inputMap.get("customername"));
+		driver.findElement(By.xpath("//input[@name='rad1']")).click();
+		driver.findElement(By.xpath("//input[@name='dob']")).sendKeys(inputMap.get("dob"));
+		//driver.findElement(By.xpath("//table[@class='layout']//tbody/tr[7]/td[1]")).click();
+		driver.findElement(By.xpath("//table[@class='layout']//tbody/tr[7]/td[2]/textarea")).sendKeys(inputMap.get("address"));
+		driver.findElement(By.xpath("//input[@name='city']")).sendKeys(inputMap.get("city"));
+		driver.findElement(By.xpath("//input[@name='state']")).sendKeys(inputMap.get("state"));
+		driver.findElement(By.xpath("//input[@name='pinno']")).sendKeys(inputMap.get("pin"));
+		driver.findElement(By.xpath("//input[@name='telephoneno']")).sendKeys(inputMap.get("mobile"));
+		driver.findElement(By.xpath("//input[@name='emailid']")).sendKeys(inputMap.get("email"));
+		driver.findElement(By.xpath("//input[@name='password']")).sendKeys(inputMap.get("password"));
+
+	}
+
+	@Then("The user should receive a Customer ID")
+	public void the_user_should_receive_a_Customer_ID() {
+		WebElement customerID = driver.findElement(By.xpath("// table[@id=\"customer\"]/tbody/tr[4]/td[2]"));
+		Assert.assertTrue(customerID.getText().length() > 0);
+		String id = customerID.getText();
+		System.out.println("Your customer ID is: " +id);
+		
+	}
+
+	@When("The user clicks on Submit")
+	public void the_user_clicks_on_Submit() {
+		driver.findElement(By.xpath("/html/body/table/tbody/tr/td/table/tbody/tr[14]/td[2]/input[1]")).click();
+	}
+
+	@Then("The user closes the browser")
+	public void the_user_closes_the_browser() {
+		driver.quit();
+	}
+	
 
 }
